@@ -32,18 +32,17 @@ Prosta aplikacja Flask, która na endpointcie `/` zwraca komunikat i wykonuje te
 
 Aplikacja będzie dostępna pod adresem http://127.0.0.1:5000.
 
-## Deploy z GitLaba
+## Deploy z GitHuba
 
-Pipeline z pliku `.gitlab-ci.yml` wdraża zmiany po pushu do domyślnej gałęzi projektu. Na serwerze musi istnieć użytkownik `deploy`, katalog `/var/www/flask-app`, środowisko `/var/www/flask-app/.venv` oraz usługa systemd `flask-app`. Użytkownik `deploy` musi mieć uprawnienia `sudo` do restartowania i sprawdzania tej usługi.
+Workflow z pliku `.github/workflows/deploy.yml` wdraża zmiany po pushu do gałęzi `main`. Na serwerze musi istnieć użytkownik `deploy`, katalog `/var/www/flask-app`, środowisko `/var/www/flask-app/.venv` oraz usługa systemd `flask-app`. Użytkownik `deploy` musi mieć uprawnienia `sudo` do restartowania i sprawdzania tej usługi.
 
-W GitLabie, w `Settings → CI/CD → Variables`, dodaj:
+W GitHubie dodaj w `Settings → Secrets and variables → Actions` następujące **Repository secrets**:
 
 - `DEPLOY_HOST` — adres serwera,
-- `DEPLOY_USER` — opcjonalnie, domyślnie `deploy`,
-- `SSH_PRIVATE_KEY` — prywatny klucz SSH, jako zmienna typu **File**, oznaczona jako **Protected** jeśli domyślna gałąź jest protected,
-- `SSH_KNOWN_HOSTS` — wynik `ssh-keyscan -H ADRES_SERWERA`, również jako zmienna typu **File**.
+- `SSH_PRIVATE_KEY` — prywatny klucz SSH,
+- `SSH_KNOWN_HOSTS` — wynik `ssh-keyscan -H ADRES_SERWERA`.
 
-Klucz publiczny dodaj do `/home/deploy/.ssh/authorized_keys` na serwerze. Zmienna `SSH_KNOWN_HOSTS` pozwala pipeline’owi weryfikować tożsamość serwera bez wyłączania sprawdzania host key.
+Klucz publiczny dodaj do `/home/deploy/.ssh/authorized_keys` na serwerze. `SSH_KNOWN_HOSTS` pozwala workflow’owi weryfikować tożsamość serwera bez wyłączania sprawdzania host key.
 
 ## Endpointy
 

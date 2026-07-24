@@ -1,0 +1,48 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+        run: |
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/id_ed25519
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: Sync application
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+        run: >-
+          rsync -az --delete
+          --exclude=".git"
+          --exclude=".env"
+          --exclude=".venv"
+          --exclude="shared/"
+          --chmod=Du=rwx,Dg=rwx,Do=rx,Fu=rw,Fg=rw,Fo=r
+          -e "ssh -i ~/.ssh/id_ed25519 -o BatchMode=yes"
+          ./ "gitlab@${DEPLOY_HOST}:/var/www/hello-world/app/"
+
+      - name: Install dependencies and restart service
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+        run: >-
+          ssh -i ~/.ssh/id_ed25519 -o BatchMode=yes
+          "gitlab@${DEPLOY_HOST}"
+          "cd /var/www/hello-world &&
+          .venv/bin/pip install -r app/requirements.txt &&
+          sudo systemctl restart python-hello-world &&
+          sudo systemctl status python-hello-world --no-pager"
