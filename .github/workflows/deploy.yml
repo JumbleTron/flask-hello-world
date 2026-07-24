@@ -29,7 +29,7 @@ jobs:
         env:
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
         run: >-
-          rsync -az --delete
+          rsync -az --no-times --delete
           --exclude=".git"
           --exclude=".github"
           --exclude=".env"
