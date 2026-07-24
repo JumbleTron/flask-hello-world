@@ -40,7 +40,7 @@ W GitHubie dodaj w `Settings → Secrets and variables → Actions` następując
 
 - `DEPLOY_HOST` — adres serwera,
 - `SSH_PRIVATE_KEY` — prywatny klucz SSH,
-- `SSH_KNOWN_HOSTS` — wynik `ssh-keyscan -H ADRES_SERWERA`.
+- `SSH_KNOWN_HOSTS` — wynik `ssh-keyscan -p 51822 -H ADRES_SERWERA`.
 
 Klucz publiczny dodaj do `/home/deploy/.ssh/authorized_keys` na serwerze. `SSH_KNOWN_HOSTS` pozwala workflow’owi weryfikować tożsamość serwera bez wyłączania sprawdzania host key.
 

@@ -7,6 +7,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      DEPLOY_PORT: "51822"
 
     steps:
       - name: Checkout
@@ -33,14 +35,14 @@ jobs:
           --exclude=".venv"
           --exclude="shared/"
           --chmod=Du=rwx,Dg=rwx,Do=rx,Fu=rw,Fg=rw,Fo=r
-          -e "ssh -i ~/.ssh/id_ed25519 -o BatchMode=yes"
+          -e "ssh -i ~/.ssh/id_ed25519 -p ${DEPLOY_PORT} -o BatchMode=yes"
           ./ "gitlab@${DEPLOY_HOST}:/var/www/hello-world/app/"
 
       - name: Install dependencies and restart service
         env:
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
         run: >-
-          ssh -i ~/.ssh/id_ed25519 -o BatchMode=yes
+          ssh -i ~/.ssh/id_ed25519 -p ${DEPLOY_PORT} -o BatchMode=yes
           "gitlab@${DEPLOY_HOST}"
           "cd /var/www/hello-world &&
           .venv/bin/pip install -r app/requirements.txt &&
