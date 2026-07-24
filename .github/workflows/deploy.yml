@@ -46,5 +46,5 @@ jobs:
           "gitlab@${DEPLOY_HOST}"
           "cd /var/www/hello-world &&
           .venv/bin/pip install -r app/requirements.txt &&
-          sudo systemctl restart python-hello-world &&
-          sudo systemctl status python-hello-world --no-pager"
+          sudo -n systemctl restart python-hello-world &&
+          sudo -n systemctl status python-hello-world --no-pager"
