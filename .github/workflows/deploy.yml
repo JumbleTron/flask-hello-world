@@ -29,13 +29,12 @@ jobs:
         env:
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
         run: >-
-          rsync -az --no-times --delete
+          rsync -az --no-times --no-perms --no-owner --no-group --delete
           --exclude=".git"
           --exclude=".github"
           --exclude=".env"
           --exclude=".venv"
           --exclude="shared/"
-          --chmod=Du=rwx,Dg=rwx,Do=rx,Fu=rw,Fg=rw,Fo=r
           -e "ssh -i ~/.ssh/id_ed25519 -p ${DEPLOY_PORT} -o BatchMode=yes"
           ./ "gitlab@${DEPLOY_HOST}:/var/www/hello-world/app/"
 
