@@ -31,7 +31,7 @@ def hello_world():
         db_message = cursor.fetchone()[0]
 
         return jsonify(
-            message="Hello, World!",
+            message="Hello, World after deploy!",
             database=db_message,
         )
     except mysql.connector.Error as error:

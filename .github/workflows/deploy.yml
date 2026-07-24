@@ -31,6 +31,7 @@ jobs:
         run: >-
           rsync -az --delete
           --exclude=".git"
+          --exclude=".github"
           --exclude=".env"
           --exclude=".venv"
           --exclude="shared/"
